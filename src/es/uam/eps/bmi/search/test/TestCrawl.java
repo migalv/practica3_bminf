@@ -8,14 +8,15 @@ package es.uam.eps.bmi.search.test;
 import es.uam.eps.bmi.search.index.WebCrawler;
 import es.uam.eps.bmi.search.index.impl.DiskIndexBuilder;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 /**
  *
  * @author sergio
  */
 public class TestCrawl {
-        public static void main (String a[]) throws IOException {
-            WebCrawler crawler= new WebCrawler("sad", 50, new DiskIndexBuilder());
+        public static void main (String a[]) throws IOException, MalformedURLException, MalformedURLException {
+            WebCrawler crawler= new WebCrawler("urls.txt", 50, new DiskIndexBuilder());
             
         
         }
