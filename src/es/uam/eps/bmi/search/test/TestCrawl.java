@@ -6,7 +6,7 @@
 package es.uam.eps.bmi.search.test;
 
 import es.uam.eps.bmi.search.index.WebCrawler;
-import es.uam.eps.bmi.search.index.impl.DiskIndexBuilder;
+import es.uam.eps.bmi.search.index.impl.SerializedRAMIndexBuilder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
  */
 public class TestCrawl {
         public static void main (String a[]) throws IOException, MalformedURLException, MalformedURLException {
-            WebCrawler crawler= new WebCrawler("urls.txt", 50, new DiskIndexBuilder());
+            WebCrawler crawler= new WebCrawler("urls.txt", 50, new SerializedRAMIndexBuilder());
             
         
         }

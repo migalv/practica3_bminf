@@ -7,8 +7,6 @@ package es.uam.eps.bmi.search.index;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,7 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -50,6 +47,7 @@ public class WebCrawler {
     private void startCrawling() throws IOException, MalformedURLException {
         String url;
 
+        //Leemos las URLs semilla para empezar a rastrear
         try (BufferedReader reader = new BufferedReader(new FileReader(this.docPath))) {
             while ((url = reader.readLine()) != null) {
                 if (!this.list.contains(url)) {
@@ -59,6 +57,8 @@ public class WebCrawler {
             }
         }
 
+        //Llamamos a la funcion crawl para que inspeccione la pagina y obtenga
+        //los enlaces a los que apunta la url que queremos analizar
         for (int i = 0; i < 10000; i++) {
             if (this.list.size() > 4000) {
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter("pages.txt"))) {
@@ -84,6 +84,7 @@ public class WebCrawler {
         URL urlConnection;
 
         try {
+            
             //Comprobamos que la URL tenga protocolo y sea correcta
             try {
                 urlConnection = new URL(url);
@@ -95,11 +96,13 @@ public class WebCrawler {
                 System.out.println("SS");
             }*/
 
-            //Nos conectamos a la URL
+            //Si se trata de una pagina https
             if (url.contains("https")) {
+                //Nos conectamos a la URL
                 HttpsURLConnection connection;
                 connection = (HttpsURLConnection) urlConnection.openConnection();
-                //Solo accedemos a aquellas que dan un codigo de respuesta 200
+                
+                //Solo accedemos a aquellas que dan un codigo de respuesta en la que podamos leer informacion
                 //Nos puede salir tambien un error de que no existe la URL
                 try {
                     int code = connection.getResponseCode();
@@ -120,11 +123,12 @@ public class WebCrawler {
                     }
                 }
 
-            } else {
+            } else {//Si se trata de una pagina http
+                //Nos conectamos a la URL
                 HttpURLConnection connection;
                 connection = (HttpURLConnection) urlConnection.openConnection();
 
-                //Solo accedemos a aquellas que dan un codigo de respuesta 200
+                //Solo accedemos a aquellas que dan un codigo de respuesta en la que podamos leer informacion
                 //Nos puede salir tambien un error de que no existe la URL
                 try {
                     int code = connection.getResponseCode();
@@ -147,11 +151,12 @@ public class WebCrawler {
             }
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            return;
         }
 
-        //Si se ha llegado a este punto, es que se ha obtenido el codigo html de una
-        //URL , por lo que podemos buscar en ella los enlaces a los que apunta
+        /*  Si se ha llegado a este punto, es que se ha obtenido el codigo html de una
+            URL , por lo que podemos buscar en ella los enlaces a los que apunta*/
+        
         //En primer lugar, parseamos y obtenemos las paginas que esten formadas por http, https o www
         String regex = "\\(?\\b(http://|https://|www[.])[-A-Za-z0-9+&amp;@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&amp;@#/%=~_()|]";
         Pattern p = Pattern.compile(regex);
@@ -159,6 +164,7 @@ public class WebCrawler {
 
         //Lectura de todos los enlaces a los que apunta la URL actual
         while (m.find()) {
+            //Detectamos un enlace posible
             String urlStr = m.group();
             if (urlStr.startsWith("(\") &amp;&amp; urlStr.endsWith(\")")) {
                 urlStr = urlStr.substring(1, urlStr.length() - 1);
