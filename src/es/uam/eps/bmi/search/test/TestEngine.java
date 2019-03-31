@@ -14,7 +14,7 @@ import es.uam.eps.bmi.search.index.lucene.LucenePositionalIndexBuilder;
 import es.uam.eps.bmi.search.index.structure.Posting;
 import es.uam.eps.bmi.search.index.structure.positional.PositionalPosting;
 import es.uam.eps.bmi.search.lucene.LuceneEngine;
-//import es.uam.eps.bmi.search.proximity.ProximityEngine;
+import es.uam.eps.bmi.search.proximity.ProximityEngine;
 import es.uam.eps.bmi.search.ranking.SearchRanking;
 import es.uam.eps.bmi.search.ranking.SearchRankingDoc;
 import es.uam.eps.bmi.search.ui.TextResultDocRenderer;
@@ -29,7 +29,7 @@ import java.io.IOException;
 public class TestEngine {
     public static void main (String a[]) throws IOException {
         System.out.println("=======================");
-        /*System.out.println("Building indices...");
+        System.out.println("Building indices...");
         
         System.out.println("-----------------------");
         System.out.println("Toy collection");
@@ -57,50 +57,49 @@ public class TestEngine {
         System.out.println("Toy collection");
         testIndex(new LuceneIndex("index/toy/lucene/regular"), "a");
         testIndex(new LucenePositionalIndex("index/toy/lucene/positional"), "a");
-        //testIndex(new PositionalIndex("index/toy/positional"), "a");
+        testIndex(new PositionalIndex("index/toy/positional"), "a");
 
         testIndex(new LuceneIndex("index/toy/lucene/regular"), "sleep");
         testIndex(new LucenePositionalIndex("index/toy/lucene/positional"), "sleep");
-        //testIndex(new PositionalIndex("index/toy/positional"), "sleep");
+        testIndex(new PositionalIndex("index/toy/positional"), "sleep");
 
         System.out.println("-----------------------");
         System.out.println("URLs collection");
         testIndex(new LuceneIndex("index/urls/lucene/regular"), "channel");
         testIndex(new LucenePositionalIndex("index/urls/lucene/positional"), "channel");
-        //testIndex(new PositionalIndex("index/urls/positional"), "channel");
+        testIndex(new PositionalIndex("index/urls/positional"), "channel");
 
         System.out.println("-----------------------");
         System.out.println("1k collection");
         testIndex(new LuceneIndex("index/1k/lucene/regular"), "kansas");
         testIndex(new LucenePositionalIndex("index/1k/lucene/positional"), "kansas");
-        //testIndex(new PositionalIndex("index/1k/positional"), "kansas");
+        testIndex(new PositionalIndex("index/1k/positional"), "kansas");
          
         System.out.println("=======================");
         System.out.println("Checking search...");
         
-        //testSearch("toy", new LuceneEngine("index/toy/lucene/regular"), "and to sleep", 5);
-        //testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "and to sleep", 5);
-        //testSearch("toy", new LuceneEngine("index/toy/lucene/regular"), "a b c", 5);
-        //testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "a b c", 5);
-        //testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "\"a b c\"", 5);
-        //testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "b c a", 5);
-        //testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "\"b c a\"", 5);
-        //testSearch("toy", new ProximityEngine(new PositionalIndex("index/toy/positional")), "b c a", 5);
+        testSearch("toy", new LuceneEngine("index/toy/lucene/regular"), "and to sleep", 5);
+        testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "and to sleep", 5);
+        testSearch("toy", new LuceneEngine("index/toy/lucene/regular"), "a b c", 5);
+        testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "a b c", 5);
+        testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "\"a b c\"", 5);
+        testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "b c a", 5);
+        testSearch("toy", new ProximityEngine(new LucenePositionalIndex("index/toy/lucene/positional")), "\"b c a\"", 5);
+        testSearch("toy", new ProximityEngine(new PositionalIndex("index/toy/positional")), "b c a", 5);
          
-        //testSearch("urls", new LuceneEngine("index/urls/lucene/regular"), "information probability", 5);
-        //testSearch("urls", new ProximityEngine(new LucenePositionalIndex("index/urls/lucene/positional")), "information probability", 5);
+        testSearch("urls", new LuceneEngine("index/urls/lucene/regular"), "information probability", 5);
+        testSearch("urls", new ProximityEngine(new LucenePositionalIndex("index/urls/lucene/positional")), "information probability", 5);
 
-       // testSearch("1k", new LuceneEngine("index/1k/lucene/regular"), "obama family tree", 5);
-        //testSearch("1k", new DocBasedVSMEngine(new LuceneIndex("index/1k/lucene/regular")), "obama family tree", 5);
-        //testSearch("1k", new ProximityEngine(new LucenePositionalIndex("index/1k/lucene/positional")), "obama family tree", 5);
-        //testSearch("1k", new ProximityEngine(new LucenePositionalIndex("index/1k/lucene/positional")), "\"obama family tree\"", 5);
-        */
-        testSearch("toy 1", new StaticEngine(new PageRank("graph/toy-graph1.dat", 0.5, 50)), "", 5);
-        testSearch("toy 2", new StaticEngine(new PageRank("graph/toy-graph2.dat", 0.6, 50)), "", 5);
-        testSearch("1k simulated links", new StaticEngine(new PageRank("graph/1k-links.dat", 0.2, 50)), "", 5);
-        Timer.reset();
-        testSearch("google", new StaticEngine(new PageRank("graph/web-Google.txt", 0.2, 50)), "", 5);
-        Timer.time("  --> ");
+        testSearch("1k", new LuceneEngine("index/1k/lucene/regular"), "obama family tree", 5);
+        testSearch("1k", new DocBasedVSMEngine(new LuceneIndex("index/1k/lucene/regular")), "obama family tree", 5);
+        testSearch("1k", new ProximityEngine(new LucenePositionalIndex("index/1k/lucene/positional")), "obama family tree", 5);
+        testSearch("1k", new ProximityEngine(new LucenePositionalIndex("index/1k/lucene/positional")), "\"obama family tree\"", 5);
+        //testSearch("toy 1", new StaticEngine(new PageRank("graph/toy-graph1.dat", 0.5, 50)), "", 5);
+        //testSearch("toy 2", new StaticEngine(new PageRank("graph/toy-graph2.dat", 0.6, 50)), "", 5);
+        //testSearch("1k simulated links", new StaticEngine(new PageRank("graph/1k-links.dat", 0.2, 50)), "", 5);
+        //Timer.reset();
+        //testSearch("google", new StaticEngine(new PageRank("graph/web-Google.txt", 0.2, 50)), "", 5);
+        //Timer.time("  --> ");
         
        /* testSearch("1k", new CombinedEngine(new SearchEngine[] {
                                                 new DocBasedVSMEngine(new LuceneIndex("index/1k/lucene/regular")),
